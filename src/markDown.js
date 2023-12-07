@@ -1,21 +1,14 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import styled from "styled-components";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"; // Choose your preferred style
+
+
 
 const MarkdownComponent = ({ markdownContent }) => {
   const messages = [{ role: "users" }];
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "auto",
-        padding: "20px",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <>
       {messages.map((message, index) => (
         <div
           key={index}
@@ -40,7 +33,7 @@ const MarkdownComponent = ({ markdownContent }) => {
           </pre>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

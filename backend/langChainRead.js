@@ -1,3 +1,5 @@
+import path from "path";
+import { fileURLToPath } from 'url';
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
@@ -17,7 +19,8 @@ import { RunnableSequence } from "langchain/schema/runnable";
 import { formatDocumentsAsString } from "langchain/util/document";
 import { StringOutputParser } from "langchain/schema/output_parser";
 
-const REPO_PATH = "/Users/johnny.wu/test-error-app/src";
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
+const REPO_PATH = path.resolve(rootDir,'../example-error-app');
 
 //loading code
 const loader = new DirectoryLoader(REPO_PATH, {

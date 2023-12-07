@@ -43,9 +43,9 @@ const SidebarItem = styled.div`
 `;
 
 const list = [
-  { title: 'SyntaxError with JSON parsing'},
-  { title: 'Range Error'},
-  { title: 'Type Error'},
+  { id: 1, title: 'SyntaxError with JSON parsing'},
+  { id: 2, title: 'Range Error'},
+  { id: 3, title: 'Type Error'},
 ];
 
 const Layout = () => {
@@ -55,7 +55,7 @@ const Layout = () => {
       <SidebarTitle>History</SidebarTitle>
       {list.map((item, index) =>
         <SidebarItem
-          key={index}
+          key={item.id}
           className={activeItem === index ? "active" : ""}
           onClick={() => setActiveItem(index)}
         >

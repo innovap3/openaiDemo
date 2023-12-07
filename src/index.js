@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import ReactDOM from "react-dom";
-// import { Provider } from "react-redux";
-// import { reducer as formReducer } from "redux-form";
-// import { createStore, combineReducers } from "redux";
-import SideBar from './SideBar';
-import Content from './Content';
-import './reset.css';
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { reducer as formReducer } from "redux-form";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { thunk } from "redux-thunk";
+import contentReducer from "./reducer";
+import SideBar from "./SideBar";
+import Content from "./Content";
+import "./reset.css";
 
-// const rootReducer = combineReducers({
-//   // Add other reducers here
-//   form: formReducer,
-// });
+const rootReducer = combineReducers({
+  form: formReducer,
+  content: contentReducer,
+});
 
-// Create the Redux store
-// const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const Container = styled.div`
   display: flex;
@@ -24,11 +25,18 @@ const Container = styled.div`
 
 const App = () => {
   return (
-    <Container>
-      <SideBar />
-      <Content />
-    </Container>
+    <Provider store={store}>
+      <Container>
+        <SideBar />
+        <Content />
+      </Container>
+    </Provider>
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

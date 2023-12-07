@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import fetchData from "./api";
 import MarkdownComponent from "./markDown.js";
 import CodeBlock from "./CodeBlock";
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   padding-left: 20%;
   margin: auto;
@@ -59,27 +61,12 @@ const errorExplanation = {
 };
 
 const Content = () => {
-  const [data, setData] = useState(null);
+  const dispatch = useDispatch();
+  // const [data, setData] = useState(null);
+  const data = useSelector((state) => state.data);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:8443/langChain",
-          errorExplanation,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+    dispatch(fetchData({ errorExplanation }));
   }, []);
 
   return (
