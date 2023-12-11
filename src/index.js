@@ -2,20 +2,20 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import ReactDOM from "react-dom";
-// import { Provider } from "react-redux";
-// import { reducer as formReducer } from "redux-form";
-// import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
+import { reducer as formReducer } from "redux-form";
+import { createStore, combineReducers } from "redux";
 import SideBar from "./SideBar";
 import Content from "./Content";
 import "./reset.css";
 
-// const rootReducer = combineReducers({
-//   // Add other reducers here
-//   form: formReducer,
-// });
+const rootReducer = combineReducers({
+  //   // Add other reducers here
+  form: formReducer,
+});
 
 // Create the Redux store
-// const store = createStore(rootReducer);
+const store = createStore(rootReducer);
 
 const Container = styled.div`
   display: flex;
@@ -51,4 +51,9 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);

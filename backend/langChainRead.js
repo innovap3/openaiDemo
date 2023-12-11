@@ -64,10 +64,11 @@ const memory = new BufferMemory({
 
 export const langChainResponse = async (req, res) => {
   try {
-    const { error } = req.body;
+    const { error, followup } = req.body;
 
     const cacheValue = cache.get(error);
-    if (cacheValue) {
+
+    if (cacheValue && !followup) {
       res.status(200).json({ result: cacheValue.result });
       return;
     }
@@ -83,7 +84,11 @@ export const langChainResponse = async (req, res) => {
       memory,
       projectName,
     });
-    const question = `I have the following error message: \"${errorMessage}\"\nCan you help to analyze the problem `;
+    let question;
+    if (followup) {
+      question = `I have following question about : ${errorMessage}`;
+    }
+    question = `I have the following error message: \"${errorMessage}\"\nCan you help to analyze the issue and give me at least one code example`;
     const result = await conversationChain.invoke({ question });
 
     await memory.saveContext({ input: question }, { output: result });
