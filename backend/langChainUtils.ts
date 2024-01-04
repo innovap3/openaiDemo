@@ -37,12 +37,11 @@ export const getConversation = ({
   memory,
   projectName,
 }: {
-  model: RunnableSequence<BaseLanguageModelInput, string>,
-  retriever: VectorStoreRetriever<FaissStore> | null,
-  projectName: string,
-  memory: BufferMemory,
-  errorStack: string
-
+  model: RunnableSequence<BaseLanguageModelInput, string>;
+  retriever: VectorStoreRetriever<FaissStore> | null;
+  projectName: string;
+  memory: BufferMemory;
+  errorStack: string;
 }) => {
   const combineDocumentsChain = RunnableSequence.from([
     {
@@ -54,7 +53,8 @@ export const getConversation = ({
       },
       context: async (output) => {
         const textForRag = `${output.rephrasedQuestion}\nError Stack: ${errorStack}`;
-        const relevantDocs = await retriever?.getRelevantDocuments(textForRag) || [];
+        const relevantDocs =
+          (await retriever?.getRelevantDocuments(textForRag)) || [];
         const formattedDocs = relevantDocs.map((doc) => {
           const path = doc.metadata.source.split(projectName)[1];
           const newPageContent = `// ${path}\n\n${doc.pageContent}\n`;

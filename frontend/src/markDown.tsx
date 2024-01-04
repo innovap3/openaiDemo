@@ -3,25 +3,13 @@ import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"; // Choose your preferred style
+import { Container, Title, Content } from "./styles";
 
 interface MarkdownComponentProps {
   markdownContent: {
     message: string;
   };
 }
-
-const Container = styled.div`
-  width: 100%;
-  margin: auto;
-  padding: 20px;
-  box-sizing: border-box;
-`;
-
-const Content = styled.div`
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
-`;
 
 const MessageBox = styled.div`
   padding: 10px;
@@ -33,12 +21,6 @@ const MessageBox = styled.div`
   font-size: 13px;
   border-radius: 8px;
   border: 1px solid #232428;
-`;
-
-const Title = styled.div`
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 1rem;
 `;
 
 const MarkdownComponent: FC<MarkdownComponentProps> = ({ markdownContent }) => {

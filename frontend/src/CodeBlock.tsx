@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Container, Title, Header, Content } from "./styles";
 
 interface CodeBlockProps {
   errorExplanation: {
@@ -10,35 +11,10 @@ interface CodeBlockProps {
   };
 }
 
-const Container = styled.div`
-  width: 100%;
-  margin: auto;
-  padding: 20px;
-  box-sizing: border-box;
-`;
-
-const HighlightContainer = styled.div`
-  padding: 20px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
-`;
-
-const Title = styled.div`
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 1rem;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 const CodeBlock: FC<CodeBlockProps> = ({ errorExplanation }) => {
   return (
     <Container>
-      <HighlightContainer>
+      <Content>
         <Header>
           <Title>Problematic Code</Title>
           <span>{errorExplanation.timestamp}</span>
@@ -48,7 +24,7 @@ const CodeBlock: FC<CodeBlockProps> = ({ errorExplanation }) => {
             {errorExplanation.errorComponent}
           </SyntaxHighlighter>
         </pre>
-      </HighlightContainer>
+      </Content>
     </Container>
   );
 };

@@ -14,16 +14,11 @@ import { VectorStoreRetriever } from "langchain/dist/vectorstores/base";
 
 class LangChainInitializer {
   private model: RunnableSequence<BaseLanguageModelInput, string>;
-  private memory: BufferMemory;
   private retriever: VectorStoreRetriever<FaissStore> | null = null;
 
   private initialized: boolean = false;
 
   constructor() {
-    this.memory = new BufferMemory({
-      returnMessages: true, // Return stored messages as instances of `BaseMessage`
-      memoryKey: "chat_history", // This must match up with our prompt template input variable.
-    });
     this.model = new ChatOpenAI({ modelName: "gpt-3.5-turbo" }).pipe(
       new StringOutputParser()
     );
@@ -75,10 +70,6 @@ class LangChainInitializer {
 
   getModel() {
     return this.model;
-  }
-
-  getMemory() {
-    return this.memory;
   }
 
   getRetriever() {
