@@ -2,8 +2,8 @@ import axios from "axios";
 
 export type ErrorData = {
   key: string;
-  memory: { from: "ai" | "user"; content: string };
-  result: string;
+  memory: { from: "ai" | "user"; content: string }[];
+  status: "success" | "pending" | "error";
   timestamp: string;
 };
 

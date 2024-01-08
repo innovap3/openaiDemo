@@ -19,9 +19,10 @@ class LangChainInitializer {
   private initialized: boolean = false;
 
   constructor() {
-    this.model = new ChatOpenAI({ modelName: "gpt-3.5-turbo" }).pipe(
-      new StringOutputParser()
-    );
+    this.model = new ChatOpenAI({
+      modelName: "gpt-3.5-turbo",
+      verbose: true,
+    }).pipe(new StringOutputParser());
   }
 
   async init() {

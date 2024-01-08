@@ -12,8 +12,8 @@ import { BufferMemory } from "langchain/memory";
 import { AIMessage, HumanMessage } from "langchain/schema";
 
 type CacheValueType = {
-  result: string;
-  memory: any;
+  status: "success" | "pending" | "error";
+  memory: BufferMemory;
   timestamp: number;
 };
 
@@ -33,7 +33,11 @@ const invokeLlm = async (error: string, input: string) => {
     new BufferMemory({ returnMessages: true, memoryKey: "chat_history" });
   const model = langChainInitializer.getModel();
   const retriever = langChainInitializer.getRetriever();
-  cache.set(error, { result: "pending", timestamp: new Date().getTime() });
+  cache.set<CacheValueType>(error, {
+    memory,
+    status: "pending",
+    timestamp: new Date().getTime(),
+  });
   try {
     const { stack: errorStack } = JSON.parse(error);
     const conversationChain = getConversation({
@@ -45,12 +49,17 @@ const invokeLlm = async (error: string, input: string) => {
     });
     const result = await conversationChain.invoke({ question: input });
     await memory?.saveContext({ input }, { output: result });
-    cache.set(error, { result, memory, timestamp: new Date().getTime() });
+    cache.set<CacheValueType>(error, {
+      status: "success",
+      memory,
+      timestamp: new Date().getTime(),
+    });
     return result;
   } catch (err: any) {
     const { message } = err;
-    cache.set(error, {
-      result: message || "error",
+    console.error(message);
+    cache.set<CacheValueType>(error, {
+      status: "error",
       memory,
       timestamp: new Date().getTime(),
     });
@@ -78,16 +87,16 @@ export const langChainResponse = async (
     const cacheValue: CacheValueType | undefined = cache.get(error);
     if (!cacheValue) {
       const input = getFirstQuestion(error);
-      const result = await invokeLlm(error, input);
-      res.status(200).json({ result });
+      await invokeLlm(error, input);
+      res.status(200).json({ status: "success" });
       return;
     } else if (!input) {
       refreshCacheTime(error);
-      res.status(200).json({ result: cacheValue.result });
+      res.status(200).json({ status: cacheValue.status });
       return;
     } else {
-      const result = await invokeLlm(error, input);
-      res.status(200).json({ result });
+      await invokeLlm(error, input);
+      res.status(200).json({ status: "success" });
       return;
     }
   } catch (e: any) {
@@ -101,14 +110,16 @@ export const getAllConversation = async (req: Request, res: Response) => {
       .keys()
       .map((key) => {
         const value = cache.get(key) as CacheValueType;
-        const memory = value.memory?.chatHistory?.messages.map((v: any) => {
-          if (v instanceof AIMessage) {
-            return { from: "ai", content: v.content };
+        const memory = (value.memory?.chatHistory as any)?.messages.map(
+          (v: any) => {
+            if (v instanceof AIMessage) {
+              return { from: "ai", content: v.content };
+            }
+            if (v instanceof HumanMessage) {
+              return { from: "user", content: v.content };
+            }
           }
-          if (v instanceof HumanMessage) {
-            return { from: "user", content: v.content };
-          }
-        });
+        );
         return { key, ...value, memory };
       })
       .sort((a, b) => b.timestamp - a.timestamp);

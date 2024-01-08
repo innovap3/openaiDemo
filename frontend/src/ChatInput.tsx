@@ -16,7 +16,7 @@ const ChatInput = ({ errorData }: { errorData: ErrorData | undefined }) => {
   const queryClient = useQueryClient();
   const { isPending, mutate } = useMutation({
     mutationFn: postAi,
-    onMutate: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.getAi] });
     },
   });
@@ -28,7 +28,7 @@ const ChatInput = ({ errorData }: { errorData: ErrorData | undefined }) => {
         <InputContainer>
           <input value={value} onChange={(e) => setValue(e.target.value)} />
           <button
-            disabled={isPending}
+            disabled={isPending || errorData?.status === "pending"}
             onClick={() => {
               if (!value) return;
               mutate({ error: key || value, input: value });
