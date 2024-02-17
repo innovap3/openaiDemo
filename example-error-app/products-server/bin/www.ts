@@ -5,7 +5,7 @@
  * Module dependencies.
  */
 
-import app from "../app";
+import app from "../src/app";
 import debugM from "debug";
 import http from "http";
 
@@ -14,7 +14,7 @@ const debug = debugM("express:server");
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || "3000");
+var port = normalizePort(process.env.PORT || "3001");
 app.set("port", port);
 
 /**
