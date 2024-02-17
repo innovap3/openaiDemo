@@ -1,15 +1,15 @@
-import { useState } from "react";
-import defaultProducts from "./products";
+import { useQuery } from "react-query";
+import { listProducts, QUERY_KEYS } from "./api";
 import Adding from "./Adding";
 import Menu from "./Menu";
 import "./App.css";
 
 function App() {
-  const [products, setProducts] = useState(defaultProducts);
+  const { data = [] } = useQuery(QUERY_KEYS.listProducts, listProducts);
   return (
     <>
-      <Menu products={products} setProducts={setProducts} />
-      <Adding products={products} />
+      <Menu products={data} />
+      <Adding products={data} />
     </>
   );
 }
