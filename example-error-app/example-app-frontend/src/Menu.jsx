@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Menu.scss";
 import ProductModal from "./ProductModal";
 
-const Menu = ({ products, setProducts }) => {
+const Menu = ({ products }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="menu">
@@ -15,7 +15,7 @@ const Menu = ({ products, setProducts }) => {
         </thead>
         <tbody>
           {products.map((data) => (
-            <tr>
+            <tr key={data.name}>
               <td>{data.name}</td>
               <td>${data.price.toFixed(2)}</td>
             </tr>
@@ -29,12 +29,7 @@ const Menu = ({ products, setProducts }) => {
       >
         Add Product
       </button>
-      <ProductModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        products={products}
-        setProducts={setProducts}
-      />
+      <ProductModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };

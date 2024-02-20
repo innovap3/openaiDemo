@@ -71,7 +71,7 @@ export const getConversation = ({
         const relevantDocs =
           (await retriever?.getRelevantDocuments(textForRag)) || [];
         const formattedDocs = relevantDocs.map((doc) => {
-          const path = doc.metadata.source.split(projectName)[1];
+          const path = projectName + doc.metadata.source.split(projectName)[1];
           const newPageContent = `// ${path}\n\n${doc.pageContent}\n`;
           return { ...doc, pageContent: newPageContent };
         });

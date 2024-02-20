@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { QUERY_KEYS, postProducts } from "./api";
 import "./ProductModal.scss";
-import { useEffect } from "react";
 
 const ProductModalForm = ({ setProductName, setPrice }) => {
   return (
@@ -17,13 +18,23 @@ const ProductModalForm = ({ setProductName, setPrice }) => {
   );
 };
 
-const ProductModal = ({ isOpen, setIsOpen, products, setProducts }) => {
+const ProductModal = ({ isOpen, setIsOpen }) => {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
-  const onAdd = () => {
-    setProducts([...products, { name: productName, price }]);
-    setIsOpen(false);
-  };
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    async () => {
+      await postProducts({ name: productName, price });
+      setIsOpen(false);
+    },
+    {
+      onSuccess: () => {
+        setProductName("");
+        setPrice("");
+        queryClient.invalidateQueries(QUERY_KEYS.listProducts);
+      },
+    }
+  );
   if (!isOpen) return null;
   return (
     <div className="product-modal">
@@ -38,7 +49,7 @@ const ProductModal = ({ isOpen, setIsOpen, products, setProducts }) => {
           />
         </div>
         <div className="footer">
-          <button onClick={onAdd}>OK</button>
+          <button onClick={mutation.mutate}>OK</button>
           <button onClick={() => setIsOpen(false)}>Close</button>
         </div>
       </div>

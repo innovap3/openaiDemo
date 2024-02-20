@@ -12,7 +12,9 @@ const Adding = ({ products }) => {
         <select onChange={(e) => setProductName(e.target.value)}>
           <option value="">--Please choose an option--</option>
           {products.map((data) => (
-            <option value={data.name}>{data.name}</option>
+            <option key={data.name} value={data.name}>
+              {data.name}
+            </option>
           ))}
         </select>
         <input
